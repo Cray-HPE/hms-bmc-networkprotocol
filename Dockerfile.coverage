@@ -1,0 +1,9 @@
+# Copyright 2019-2020 Hewlett Packard Enterprise Development LP
+
+# Dockerfile for running testing coverage on HMS BMC network protocol pkg.
+
+FROM cray/hms-bmc-networkprotocol-build-base
+
+# Run coverage.
+RUN set -ex \
+    && go test -cover -v stash.us.cray.com/HMS/hms-bmc-networkprotocol/pkg/.
