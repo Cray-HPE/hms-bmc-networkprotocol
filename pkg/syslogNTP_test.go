@@ -1,12 +1,24 @@
-// Copyright 2019,2020 Cray Inc. All Rights Reserved.
-//
-// Except as permitted by contract or express written permission of Cray Inc.,
-// no part of this work or its content may be modified, used, reproduced or
-// disclosed in any form. Modifications made without express permission of
-// Cray Inc. may damage the system the software is installed within, may
-// disqualify the user from receiving support from Cray Inc. under support or
-// maintenance contracts, or require additional support services outside the
-// scope of those contracts to repair the software or system.
+// MIT License
+// 
+// (C) Copyright [2019-2021] Hewlett Packard Enterprise Development LP
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the
+// Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+// OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+// ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+// OTHER DEALINGS IN THE SOFTWARE.
 
 
 package bmc_nwprotocol
@@ -21,6 +33,7 @@ import (
 	"reflect"
 	"time"
 	"strings"
+	"os"
 )
 
 var __global_t *testing.T
@@ -396,9 +409,31 @@ func Test_makeNPData(t *testing.T) {
 	}
 }
 
+var expSvcName = "NWPTest"
+var gotUA bool
+
+func hasUserAgentHeader(r *http.Request) bool {
+    if (len(r.Header) == 0) {
+        return false
+    }
+
+    alist,ok := r.Header["User-Agent"]
+    if (!ok) {
+        return false
+    }
+
+	for _,hdr := range(alist) {
+		if (hdr == expSvcName) {
+			return true
+		}
+	}
+    return true
+}
 
 func nwpPatchHandler(w http.ResponseWriter, req *http.Request) {
 	var nwp RedfishNWProtocol
+
+	gotUA = hasUserAgentHeader(req)
 
 	if (stallG) {
 		time.Sleep(18 * time.Second)
@@ -447,6 +482,29 @@ func Test_setXnameNWPInfo(t *testing.T) {
 	nwp.SSHConsoleKey = "wwxxyyzz"
 	rfSuffix = "__test__"	//force "test mode"
 
+	nwProtoGlobal,err = InitInstance(nwp,rfSuffix,expSvcName)
+	if (err != nil) {
+		t.Error("ERROR creating network protocol data:",err)
+	}
+	nwpServer = httptest.NewServer(http.HandlerFunc(nwpPatchHandler))
+
+	t.Log("Testing SetXNameNWPInfo happy path.")
+
+	//"overload" the 'address' parameter of this func to pass the test URL
+
+	err = SetXNameNWPInfo(nwProtoGlobal,nwpServer.URL,"user","pass")
+	if (err != nil) {
+		t.Error("ERROR in setXnameNWPInfo():",err)
+	}
+	if (!gotUA) {
+		t.Error("ERROR, didn't get User-Agent header in request.")
+	}
+	nwpServer.Close()
+
+	//Same test, using default service name
+
+	serviceName = ""
+	expSvcName,_ = os.Hostname()
 	nwProtoGlobal,err = Init(nwp,rfSuffix)
 	if (err != nil) {
 		t.Error("ERROR creating network protocol data:",err)
@@ -461,7 +519,11 @@ func Test_setXnameNWPInfo(t *testing.T) {
 	if (err != nil) {
 		t.Error("ERROR in setXnameNWPInfo():",err)
 	}
+	if (!gotUA) {
+		t.Error("ERROR, didn't get User-Agent header in request.")
+	}
 	nwpServer.Close()
+
 
 	// Test with no valid bit set
 
