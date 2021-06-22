@@ -12,7 +12,8 @@ pipeline {
 
     environment {
         NAME = "hms-bmc-networkprotocol"
-        DESCRIPTION = "GO package for BMC network protocol settings, primarily for Mountain controllers."
+        DESCRIPTION = "GO package for BMC network protocol settings,
+primarily for Mountain controllers."
         IS_STABLE = getBuildIsStable()
         VERSION = getDockerBuildVersion(isStable: env.IS_STABLE)
         DOCKER_ARGS = getDockerBuildArgs(name: env.NAME, description: env.DESCRIPTION)
@@ -28,6 +29,20 @@ pipeline {
         stage("Run Coverage Tests") {
             steps {
                 sh "make coverage"
+            }
+        }
+        
+        stage("Build") {
+            steps {
+                sh "make image"
+            }
+        }
+
+        stage('Publish ') {
+            steps {
+                script {
+                    publishCsmDockerImage(image: env.NAME, tag: env.VERSION, isStable: env.IS_STABLE)
+                }
             }
         }
     }
