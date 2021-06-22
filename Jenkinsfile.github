@@ -12,8 +12,7 @@ pipeline {
 
     environment {
         NAME = "hms-bmc-networkprotocol"
-        DESCRIPTION = "GO package for BMC network protocol settings,
-primarily for Mountain controllers."
+        DESCRIPTION = "GO package for BMC network protocol settings, primarily for Mountain controllers."
         IS_STABLE = getBuildIsStable()
         VERSION = getDockerBuildVersion(isStable: env.IS_STABLE)
         DOCKER_ARGS = getDockerBuildArgs(name: env.NAME, description: env.DESCRIPTION)
