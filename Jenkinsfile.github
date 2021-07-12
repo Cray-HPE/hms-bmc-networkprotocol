@@ -30,19 +30,5 @@ pipeline {
                 sh "make coverage"
             }
         }
-        
-        stage("Build") {
-            steps {
-                sh "make image"
-            }
-        }
-
-        stage('Publish ') {
-            steps {
-                script {
-                    publishCsmDockerImage(image: env.NAME, tag: env.VERSION, isStable: env.IS_STABLE)
-                }
-            }
-        }
     }
 }
