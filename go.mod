@@ -1,5 +1,5 @@
-module stash.us.cray.com/HMS/hms-bmc-networkprotocol
+module github.com/Cray-HPE/hms-bmc-networkprotocol
 
 go 1.16
 
-require stash.us.cray.com/HMS/hms-certs v1.2.0
+require github.com/Cray-HPE/hms-certs v1.3.2
