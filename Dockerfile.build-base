@@ -35,5 +35,5 @@ FROM build-base
 
 RUN go env -w GO111MODULE=auto
 
-COPY pkg $GOPATH/src/stash.us.cray.com/HMS/hms-bmc-networkprotocol/pkg
-COPY vendor $GOPATH/src/stash.us.cray.com/HMS/hms-bmc-networkprotocol/vendor
+COPY pkg $GOPATH/src/github.com/Cray-HPE/hms-bmc-networkprotocol/pkg
+COPY vendor $GOPATH/src/github.com/Cray-HPE/hms-bmc-networkprotocol/vendor

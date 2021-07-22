@@ -33,7 +33,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"stash.us.cray.com/HMS/hms-certs/pkg/hms_certs"
+	hms_certs "github.com/Cray-HPE/hms-certs/pkg/hms_certs"
 )
 
 // This package provides an interface for sending Network Protocol stuff

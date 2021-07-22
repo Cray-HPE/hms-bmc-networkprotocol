@@ -26,4 +26,4 @@ FROM cray/hms-bmc-networkprotocol-build-base
 
 # Run any tests that might be present.
 RUN set -ex \
-    && go test -v stash.us.cray.com/HMS/hms-bmc-networkprotocol/pkg/.
+    && go test -v github.com/Cray-HPE/hms-bmc-networkprotocol/pkg/.
