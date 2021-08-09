@@ -7,7 +7,7 @@ DOES THIS CHANGE INVOLVE ANY SCHEME CHANGES?  Y/N
 
 REMINDER: HAVE YOU INCREMENTED VERSION NUMBERS? E.G., .spec, Chart.yaml, .version, CHANGELOG.md
 
-REMINDER 2: HAVE YOU UPDATED THE COPYRIGHT PER hpe GUIDELINES: Copyright 2014-2021 Hewlett Packard Enterprise Development LP    ? Y/N
+REMINDER 2: HAVE YOU UPDATED THE COPYRIGHT PER hpe GUIDELINES: (C) Copyright 2014-2021 Hewlett Packard Enterprise Development LP    ? Y/N
 
 ### Issues and Related PRs
 
