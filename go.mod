@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/Cray-HPE/hms-base/v2 v2.3.0
-	github.com/Cray-HPE/hms-certs v1.7.0
+	github.com/Cray-HPE/hms-certs v1.7.1
 )
 
 require (
